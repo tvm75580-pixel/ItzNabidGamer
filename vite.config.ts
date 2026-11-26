@@ -6,6 +6,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [
       react(),
       tailwindcss(),
@@ -21,6 +22,14 @@ export default defineConfig(() => {
           const distAssets = path.resolve(distDir, 'src/assets');
           if (fs.existsSync(distDir) && fs.existsSync(srcAssets)) {
             fs.cpSync(srcAssets, distAssets, { recursive: true, force: true });
+          }
+          // Sync production web bundle into Android APK offline assets
+          const androidMainDir = path.resolve(__dirname, 'app/src/main');
+          if (fs.existsSync(distDir) && fs.existsSync(androidMainDir)) {
+            const androidWwwDir = path.resolve(androidMainDir, 'assets/www');
+            fs.rmSync(androidWwwDir, { recursive: true, force: true });
+            fs.mkdirSync(androidWwwDir, { recursive: true });
+            fs.cpSync(distDir, androidWwwDir, { recursive: true, force: true });
           }
         },
       },

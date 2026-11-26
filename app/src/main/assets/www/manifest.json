@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Obsidian Tiers — 3D Minecraft Rankings",
+  "short_name": "ObsidianTiers",
+  "description": "Offline-first 3D Minecraft competitive esports tier list and player showcase.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#06070a",
+  "theme_color": "#06070a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

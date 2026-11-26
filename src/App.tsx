@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Crown,
+  Download,
   Lock,
   Plus,
   Search,
@@ -225,11 +226,24 @@ export default function App() {
   const handleExportJson = () => {
     try {
       const json = buildBackupJson(players, identity, settings);
+      const filename = `obsidian-tiers-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      const bridge = (
+        window as unknown as {
+          AndroidBridge?: { saveJsonBackup?: (name: string, payload: string) => void };
+        }
+      ).AndroidBridge;
+
+      if (bridge && typeof bridge.saveJsonBackup === 'function') {
+        bridge.saveJsonBackup(filename, json);
+        showToast('Opening Android file saver...');
+        return;
+      }
+
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `obsidian-tiers-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -515,6 +529,15 @@ export default function App() {
                   Add Player
                 </button>
               )}
+
+              <a
+                href="/obsidian-tiers.html"
+                download="obsidian-tiers.html"
+                className="flex items-center gap-1.5 rounded-lg border border-[#232938] bg-[#06070a] px-3 py-2 text-xs font-semibold text-slate-300 hover:border-[#eab308]/60 hover:text-[#fde047] whitespace-nowrap transition-colors"
+              >
+                <Download className="h-3.5 w-3.5 text-[#f97316]" />
+                Single-File HTML
+              </a>
 
               <button
                 type="button"
